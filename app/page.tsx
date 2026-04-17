@@ -20,7 +20,7 @@ export default function Home() {
             Async multiplayer trivia for aviation enthusiasts. Airport codes, aircraft types, airline logos, routes — 6 categories, thousands of questions.
           </p>
           <a
-            href="https://trivair.app"
+            href="https://apps.apple.com/us/app/trivair/id6761112939"
             target="_blank"
             rel="noopener noreferrer"
             style={{
