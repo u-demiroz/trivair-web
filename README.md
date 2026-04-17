@@ -1,2 +1,3 @@
-# triviair-web
-TrivAir - Aviation Trivia Game Landing Page
+# TrivAir Web
+
+TrivAir — Aviation Trivia Game Landing Page
