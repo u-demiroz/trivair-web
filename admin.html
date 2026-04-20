@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrivAir Admin Panel</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #0a0e1a; color: #e0e0e0; min-height: 100vh; }
+
+    #login-screen {
+      display: flex; align-items: center; justify-content: center; height: 100vh;
+    }
+    .login-box {
+      background: #141824; border-radius: 16px; padding: 40px; width: 340px;
+      border: 1px solid #1e2a3a; text-align: center;
+    }
+    .login-box h1 { color: #0a84ff; margin-bottom: 8px; font-size: 24px; }
+    .login-box p { color: #888; margin-bottom: 24px; font-size: 14px; }
+    .login-box input {
+      width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid #1e2a3a;
+      background: #0a0e1a; color: #fff; font-size: 16px; margin-bottom: 12px;
+    }
+    .login-box button {
+      width: 100%; padding: 12px; background: #0a84ff; color: #fff; border: none;
+      border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: 600;
+    }
+    .login-box button:hover { background: #0070d9; }
+    #login-error { color: #ff453a; font-size: 13px; margin-top: 8px; display: none; }
+
+    #admin-panel { display: none; }
+
+    header {
+      background: #141824; border-bottom: 1px solid #1e2a3a;
+      padding: 16px 24px; display: flex; align-items: center; gap: 16px;
+    }
+    header h1 { color: #0a84ff; font-size: 20px; }
+    header span { color: #888; font-size: 13px; }
+    header button {
+      margin-left: auto; padding: 8px 16px; background: #1e2a3a; color: #888;
+      border: none; border-radius: 8px; cursor: pointer; font-size: 13px;
+    }
+
+    .tabs {
+      display: flex; gap: 4px; padding: 16px 24px 0;
+      border-bottom: 1px solid #1e2a3a;
+    }
+    .tab {
+      padding: 10px 20px; cursor: pointer; border-radius: 8px 8px 0 0;
+      font-size: 14px; color: #888; border: 1px solid transparent;
+    }
+    .tab.active {
+      color: #0a84ff; background: #141824; border-color: #1e2a3a;
+      border-bottom-color: #141824;
+    }
+
+    .content { padding: 24px; }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #141824; border-radius: 12px; padding: 20px;
+      border: 1px solid #1e2a3a; text-align: center;
+    }
+    .stat-card .value { font-size: 32px; font-weight: 700; color: #0a84ff; }
+    .stat-card .label { font-size: 12px; color: #888; margin-top: 4px; }
+
+    table {
+      width: 100%; border-collapse: collapse; background: #141824;
+      border-radius: 12px; overflow: hidden; border: 1px solid #1e2a3a;
+    }
+    th { background: #0a0e1a; padding: 12px 16px; text-align: left; font-size: 12px; color: #888; text-transform: uppercase; }
+    td { padding: 12px 16px; border-top: 1px solid #1e2a3a; font-size: 13px; }
+    tr:hover td { background: #1a2030; }
+
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    }
+    .badge-blue { background: rgba(10,132,255,0.2); color: #0a84ff; }
+    .badge-green { background: rgba(52,199,89,0.2); color: #34c759; }
+    .badge-red { background: rgba(255,69,58,0.2); color: #ff453a; }
+    .badge-yellow { background: rgba(255,214,10,0.2); color: #ffd60a; }
+
+    .actions { display: flex; gap: 8px; }
+    .btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; }
+    .btn-primary { background: #0a84ff; color: #fff; }
+    .btn-danger { background: #ff453a; color: #fff; }
+    .btn-secondary { background: #1e2a3a; color: #ccc; }
+
+    .search-bar {
+      display: flex; gap: 12px; margin-bottom: 16px;
+    }
+    .search-bar input {
+      flex: 1; padding: 10px 16px; background: #141824; border: 1px solid #1e2a3a;
+      border-radius: 10px; color: #fff; font-size: 14px;
+    }
+    .search-bar select {
+      padding: 10px 16px; background: #141824; border: 1px solid #1e2a3a;
+      border-radius: 10px; color: #fff; font-size: 14px;
+    }
+
+    .loading { text-align: center; padding: 40px; color: #888; }
+    .report-text { font-size: 12px; color: #ccc; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <h1>✈️ TrivAir</h1>
+    <p>Admin Panel</p>
+    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+    <button onclick="login()">Login</button>
+    <div id="login-error">Wrong password</div>
+  </div>
+</div>
+
+<div id="admin-panel">
+  <header>
+    <h1>✈️ TrivAir Admin</h1>
+    <span id="last-updated">Loading...</span>
+    <button onclick="logout()">Logout</button>
+  </header>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
+    <div class="tab" onclick="showTab('users')">Users</div>
+    <div class="tab" onclick="showTab('questions')">Questions</div>
+    <div class="tab" onclick="showTab('reports')">Reports</div>
+    <div class="tab" onclick="showTab('matches')">Matches</div>
+  </div>
+  <div class="content">
+
+    <!-- Dashboard -->
+    <div id="tab-dashboard">
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="value" id="stat-users">-</div><div class="label">Total Users</div></div>
+        <div class="stat-card"><div class="value" id="stat-questions">-</div><div class="label">Questions</div></div>
+        <div class="stat-card"><div class="value" id="stat-matches">-</div><div class="label">Active Matches</div></div>
+        <div class="stat-card"><div class="value" id="stat-reports">-</div><div class="label">Pending Reports</div></div>
+        <div class="stat-card"><div class="value" id="stat-logos">-</div><div class="label">Logo Questions</div></div>
+        <div class="stat-card"><div class="value" id="stat-premium">-</div><div class="label">Premium Users</div></div>
+      </div>
+      <h3 style="margin-bottom:12px;color:#888;font-size:14px">CATEGORY BREAKDOWN</h3>
+      <div id="category-table"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- Users -->
+    <div id="tab-users" style="display:none">
+      <div class="search-bar">
+        <input id="user-search" type="text" placeholder="Search by name..." oninput="filterUsers()">
+      </div>
+      <div id="users-table"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- Questions -->
+    <div id="tab-questions" style="display:none">
+      <div class="search-bar">
+        <input id="q-search" type="text" placeholder="Search questions..." oninput="filterQuestions()">
+        <select id="q-category" onchange="filterQuestions()">
+          <option value="">All Categories</option>
+          <option>airport_codes</option>
+          <option>aircraft_type</option>
+          <option>logo_recognition</option>
+          <option>aviation_records</option>
+          <option>routes_distance</option>
+          <option>aviation_cinema</option>
+        </select>
+      </div>
+      <div id="questions-table"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- Reports -->
+    <div id="tab-reports" style="display:none">
+      <div id="reports-table"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- Matches -->
+    <div id="tab-matches" style="display:none">
+      <div id="matches-table"><div class="loading">Loading...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+const ADMIN_PASSWORD = 'TrivAir2026!Admin';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyApAMFiO4rRV8YyV-W6ajzk_OOIUB5Z_7g",
+  authDomain: "triviair-2aa41.firebaseapp.com",
+  projectId: "triviair-2aa41",
+  storageBucket: "triviair-2aa41.firebasestorage.app",
+  messagingSenderId: "928837338187",
+  appId: "1:928837338187:android:cdcc8f3be627775febb9ce"
+};
+
+// Will be configured with real credentials
+let db;
+let allUsers = [];
+let allQuestions = [];
+
+function login() {
+  const pwd = document.getElementById('password-input').value;
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    initFirebase();
+    loadDashboard();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('password-input').value = '';
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['dashboard','users','questions','reports','matches'][i] === tab);
+  });
+  ['dashboard','users','questions','reports','matches'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  if (tab === 'users' && allUsers.length === 0) loadUsers();
+  if (tab === 'questions' && allQuestions.length === 0) loadQuestions();
+  if (tab === 'reports') loadReports();
+  if (tab === 'matches') loadMatches();
+}
+
+function initFirebase() {
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+}
+
+async function loadDashboard() {
+  document.getElementById('last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  try {
+    const [users, questions, activeMatches, reports, logos, premiumUsers] = await Promise.all([
+      db.collection('users').get(),
+      db.collection('questions').get(),
+      db.collection('matches').where('status', '!=', 'completed').get(),
+      db.collection('question_reports').where('status', '==', 'pending').get(),
+      db.collection('questions').where('type', '==', 'image').get(),
+      db.collection('users').where('isPremium', '==', true).get(),
+    ]);
+    document.getElementById('stat-users').textContent = users.size;
+    document.getElementById('stat-questions').textContent = questions.size;
+    document.getElementById('stat-matches').textContent = activeMatches.size;
+    document.getElementById('stat-reports').textContent = reports.size;
+    document.getElementById('stat-logos').textContent = logos.size;
+    document.getElementById('stat-premium').textContent = premiumUsers.size;
+
+    // Category breakdown
+    const cats = {};
+    questions.docs.forEach(d => {
+      const cat = d.data().category || 'unknown';
+      cats[cat] = (cats[cat] || 0) + 1;
+    });
+    const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]);
+    let html = '<table><tr><th>Category</th><th>Count</th></tr>';
+    sorted.forEach(([cat, count]) => {
+      html += `<tr><td>${cat}</td><td><span class="badge badge-blue">${count}</span></td></tr>`;
+    });
+    html += '</table>';
+    document.getElementById('category-table').innerHTML = html;
+  } catch(e) {
+    document.getElementById('category-table').innerHTML = '<div class="loading">Error: ' + e.message + '</div>';
+  }
+}
+
+async function loadUsers() {
+  document.getElementById('users-table').innerHTML = '<div class="loading">Loading...</div>';
+  const snap = await db.collection('users').orderBy('totalScore', 'desc').limit(100).get();
+  allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderUsers(allUsers);
+}
+
+function renderUsers(users) {
+  if (users.length === 0) { document.getElementById('users-table').innerHTML = '<div class="loading">No users</div>'; return; }
+  let html = '<table><tr><th>Name</th><th>Score</th><th>Jokers</th><th>Rights</th><th>Premium</th><th>Actions</th></tr>';
+  users.forEach(u => {
+    html += `<tr>
+      <td>${u.displayName || '-'}</td>
+      <td>${u.totalScore || 0}</td>
+      <td>${u.jokersOwned || 0}</td>
+      <td>${u.matchRights ?? '-'}</td>
+      <td>${u.isPremium ? '<span class="badge badge-green">✨ Yes</span>' : '<span class="badge badge-yellow">No</span>'}</td>
+      <td class="actions">
+        <button class="btn btn-secondary" onclick="addRights('${u.id}')">+5 Rights</button>
+        <button class="btn btn-secondary" onclick="addJokers('${u.id}')">+5 Jokers</button>
+      </td>
+    </tr>`;
+  });
+  html += '</table>';
+  document.getElementById('users-table').innerHTML = html;
+}
+
+function filterUsers() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  renderUsers(allUsers.filter(u => (u.displayName || '').toLowerCase().includes(q)));
+}
+
+async function addRights(uid) {
+  await db.collection('users').doc(uid).update({ matchRights: firebase.firestore.FieldValue.increment(5) });
+  alert('Added 5 rights!');
+}
+
+async function addJokers(uid) {
+  await db.collection('users').doc(uid).update({ jokersOwned: firebase.firestore.FieldValue.increment(5) });
+  alert('Added 5 jokers!');
+}
+
+async function loadQuestions() {
+  document.getElementById('questions-table').innerHTML = '<div class="loading">Loading...</div>';
+  const snap = await db.collection('questions').orderBy('category').limit(200).get();
+  allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderQuestions(allQuestions);
+}
+
+function renderQuestions(qs) {
+  if (qs.length === 0) { document.getElementById('questions-table').innerHTML = '<div class="loading">No questions</div>'; return; }
+  let html = '<table><tr><th>Question (TR)</th><th>Category</th><th>Type</th><th>Correct</th><th>Actions</th></tr>';
+  qs.slice(0, 100).forEach(q => {
+    const text = q.translations?.tr?.question || '-';
+    const opts = q.translations?.tr?.options || [];
+    const correct = opts[q.correctAnswerIndex] || '-';
+    html += `<tr>
+      <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${text}</td>
+      <td><span class="badge badge-blue">${q.category || '-'}</span></td>
+      <td>${q.type === 'image' ? '🖼️' : '📝'}</td>
+      <td style="font-size:12px;color:#0a84ff">${correct.substring(0,30)}</td>
+      <td><button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button></td>
+    </tr>`;
+  });
+  html += '</table>';
+  if (qs.length > 100) html += `<p style="padding:12px;color:#888;font-size:13px">Showing 100 of ${qs.length} results</p>`;
+  document.getElementById('questions-table').innerHTML = html;
+}
+
+function filterQuestions() {
+  const q = document.getElementById('q-search').value.toLowerCase();
+  const cat = document.getElementById('q-category').value;
+  renderQuestions(allQuestions.filter(item => {
+    const text = (item.translations?.tr?.question || '').toLowerCase();
+    return (!q || text.includes(q)) && (!cat || item.category === cat);
+  }));
+}
+
+async function deleteQuestion(id) {
+  if (!confirm('Delete this question?')) return;
+  await db.collection('questions').doc(id).delete();
+  allQuestions = allQuestions.filter(q => q.id !== id);
+  filterQuestions();
+  alert('Deleted!');
+}
+
+async function loadReports() {
+  document.getElementById('reports-table').innerHTML = '<div class="loading">Loading...</div>';
+  const snap = await db.collection('question_reports').where('status', '==', 'pending').limit(50).get();
+  if (snap.empty) { document.getElementById('reports-table').innerHTML = '<div class="loading">No pending reports 🎉</div>'; return; }
+  let html = '<table><tr><th>Reason</th><th>Question ID</th><th>Actions</th></tr>';
+  snap.docs.forEach(d => {
+    const data = d.data();
+    html += `<tr>
+      <td class="report-text">${data.reason || '-'}</td>
+      <td style="font-size:11px;color:#888">${data.questionId || '-'}</td>
+      <td class="actions">
+        <button class="btn btn-danger" onclick="deleteReportedQuestion('${d.id}','${data.questionId}')">Delete Q</button>
+        <button class="btn btn-secondary" onclick="dismissReport('${d.id}')">Dismiss</button>
+      </td>
+    </tr>`;
+  });
+  html += '</table>';
+  document.getElementById('reports-table').innerHTML = html;
+}
+
+async function deleteReportedQuestion(reportId, questionId) {
+  if (!confirm('Delete question and dismiss report?')) return;
+  const batch = db.batch();
+  if (questionId) batch.delete(db.collection('questions').doc(questionId));
+  batch.update(db.collection('question_reports').doc(reportId), { status: 'resolved' });
+  await batch.commit();
+  loadReports();
+}
+
+async function dismissReport(reportId) {
+  await db.collection('question_reports').doc(reportId).update({ status: 'dismissed' });
+  loadReports();
+}
+
+async function loadMatches() {
+  document.getElementById('matches-table').innerHTML = '<div class="loading">Loading...</div>';
+  const snap = await db.collection('matches').orderBy('createdAt', 'desc').limit(50).get();
+  let html = '<table><tr><th>Status</th><th>Players</th><th>Created</th></tr>';
+  snap.docs.forEach(d => {
+    const data = d.data();
+    const created = data.createdAt?.toDate()?.toLocaleDateString() || '-';
+    const statusColors = {
+      completed: 'badge-green', mid_score_pending: 'badge-yellow',
+      waiting_a_first_half: 'badge-blue', waiting_b_first_half: 'badge-blue',
+    };
+    const color = statusColors[data.status] || 'badge-blue';
+    html += `<tr>
+      <td><span class="badge ${color}">${data.status}</span></td>
+      <td style="font-size:11px;color:#888">${(data.playerA||'').substring(0,8)}... vs ${(data.playerB||'').substring(0,8)}...</td>
+      <td style="font-size:12px;color:#888">${created}</td>
+    </tr>`;
+  });
+  html += '</table>';
+  document.getElementById('matches-table').innerHTML = html;
+}
+</script>
+</body>
+</html>
