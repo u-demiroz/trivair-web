@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrivAir — İndir</title>
+  <script>
+    (function () {
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+        window.location.replace("https://apps.apple.com/us/app/triviair/id6761112939");
+      } else if (/android/i.test(ua)) {
+        window.location.replace("https://play.google.com/store/apps/details?id=com.trivair.app");
+      } else {
+        window.location.replace("/");
+      }
+    })();
+  </script>
+</head>
+<body>
+</body>
+</html>
