@@ -318,24 +318,31 @@ async function addJokers(uid) {
   alert('Added 5 jokers!');
 }
 
+let questionsPage = 0;
+const questionsPageSize = 50;
+
 async function loadQuestions() {
   document.getElementById('questions-table').innerHTML = '<div class="loading">Loading...</div>';
   const cat = document.getElementById('q-category').value;
   let query = db.collection('questions');
   if (cat) {
-    query = query.where('category', '==', cat).limit(200);
+    query = query.where('category', '==', cat).limit(500);
   } else {
     query = query.orderBy('category').limit(200);
   }
   const snap = await query.get();
   allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  questionsPage = 0;
   renderQuestions(allQuestions);
 }
 
 function renderQuestions(qs) {
-  if (qs.length === 0) { document.getElementById('questions-table').innerHTML = '<div class="loading">No questions</div>'; return; }
+  if (qs.length === 0) { document.getElementById('questions-table').innerHTML = '<div class="loading">No questions found</div>'; return; }
+  const start = questionsPage * questionsPageSize;
+  const end = start + questionsPageSize;
+  const page = qs.slice(start, end);
   let html = '<table><tr><th>Question (TR)</th><th>Category</th><th>Type</th><th>Correct</th><th>Actions</th></tr>';
-  qs.slice(0, 100).forEach(q => {
+  page.forEach(q => {
     const text = q.translations?.tr?.question || '-';
     const opts = q.translations?.tr?.options || [];
     const correct = opts[q.correctAnswerIndex] || '-';
@@ -348,7 +355,12 @@ function renderQuestions(qs) {
     </tr>`;
   });
   html += '</table>';
-  if (qs.length > 100) html += `<p style="padding:12px;color:#888;font-size:13px">Showing 100 of ${qs.length} results</p>`;
+  const totalPages = Math.ceil(qs.length / questionsPageSize);
+  html += `<div style="padding:12px;display:flex;gap:8px;align-items:center;font-size:13px;color:#888">`;
+  html += `<span>${start+1}–${Math.min(end,qs.length)} / ${qs.length}</span>`;
+  if (questionsPage > 0) html += `<button class="btn btn-secondary" onclick="questionsPage--;renderQuestions(allQuestions)">← Önceki</button>`;
+  if (end < qs.length) html += `<button class="btn btn-secondary" onclick="questionsPage++;renderQuestions(allQuestions)">Sonraki →</button>`;
+  html += `</div>`;
   document.getElementById('questions-table').innerHTML = html;
 }
 
