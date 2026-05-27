@@ -158,7 +158,7 @@
     <div id="tab-questions" style="display:none">
       <div class="search-bar">
         <input id="q-search" type="text" placeholder="Search questions..." oninput="filterQuestions()">
-        <select id="q-category" onchange="filterQuestions()">
+        <select id="q-category" onchange="allQuestions=[]; loadQuestions()">
           <option value="">All Categories</option>
           <option>airport_codes</option>
           <option>aircraft_type</option>
@@ -320,7 +320,14 @@ async function addJokers(uid) {
 
 async function loadQuestions() {
   document.getElementById('questions-table').innerHTML = '<div class="loading">Loading...</div>';
-  const snap = await db.collection('questions').orderBy('category').limit(200).get();
+  const cat = document.getElementById('q-category').value;
+  let query = db.collection('questions');
+  if (cat) {
+    query = query.where('category', '==', cat).limit(200);
+  } else {
+    query = query.orderBy('category').limit(200);
+  }
+  const snap = await query.get();
   allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderQuestions(allQuestions);
 }
