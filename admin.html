@@ -342,7 +342,7 @@ function renderQuestions(qs) {
     html += `<tr>
       <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${text}</td>
       <td><span class="badge badge-blue">${q.category || '-'}</span></td>
-      <td>${q.type === 'image' ? '🖼️' : '📝'}</td>
+      <td>${q.type === 'image' ? `<a href="${q.imageUrl}" target="_blank">🖼️</a>` : '📝'}</td>
       <td style="font-size:12px;color:#0a84ff">${correct.substring(0,30)}</td>
       <td><button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button></td>
     </tr>`;
