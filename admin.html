@@ -231,23 +231,34 @@ const firebaseConfig = {
 let db, allUsers = [], allQuestions = [], questionsPage = 0;
 const PAGE_SIZE = 50;
 
+function initAdmin() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  loadDashboard();
+}
+
 function login() {
   const pwd = document.getElementById('password-input').value;
   if (pwd === ADMIN_PASSWORD) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-panel').style.display = 'block';
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    loadDashboard();
+    localStorage.setItem('trivair_admin_auth', '1');
+    initAdmin();
   } else {
     document.getElementById('login-error').style.display = 'block';
   }
 }
 
 function logout() {
+  localStorage.removeItem('trivair_admin_auth');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('admin-panel').style.display = 'none';
   document.getElementById('password-input').value = '';
+}
+
+// Auto-login if already authenticated
+if (localStorage.getItem('trivair_admin_auth') === '1') {
+  window.addEventListener('DOMContentLoaded', initAdmin);
 }
 
 function showTab(tab) {
