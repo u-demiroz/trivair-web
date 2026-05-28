@@ -285,8 +285,8 @@ async function loadDashboard() {
     const statuses = ['waiting_a_first_half','waiting_b_first_half','mid_score_pending','waiting_a_second_half','waiting_b_second_half'];
     let activeCount = 0;
     for (const s of statuses) {
-      const snap = await db.collection('matches').where('status','==',s).count().get();
-      activeCount += snap.data().count;
+      const snap = await db.collection('matches').where('status','==',s).get();
+      activeCount += snap.size;
     }
     document.getElementById('stat-users').textContent = users.size;
     document.getElementById('stat-questions').textContent = questions.size;
