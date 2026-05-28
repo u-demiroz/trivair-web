@@ -502,71 +502,81 @@ async function deleteQuestion(id) {
 // ============ REPORTS ============
 async function loadReports() {
   document.getElementById('reports-table').innerHTML = '<div class="loading">Yükleniyor...</div>';
-  const status = document.getElementById('report-status').value;
-  const snap = await db.collection('question_reports').where('status','==',status).limit(100).get();
-  if (snap.empty) { document.getElementById('reports-table').innerHTML = '<div class="loading">Rapor yok 🎉</div>'; return; }
+  try {
+    const status = document.getElementById('report-status').value;
+    const snap = await db.collection('question_reports').where('status','==',status).limit(100).get();
+    if (snap.empty) { document.getElementById('reports-table').innerHTML = '<div class="loading">Rapor yok 🎉</div>'; return; }
 
-  // Soru detaylarını çek
-  const questionIds = [...new Set(snap.docs.map(d=>d.data().questionId).filter(Boolean))];
-  const questionMap = {};
-  for (const qid of questionIds) {
-    try { const qd = await db.collection('questions').doc(qid).get(); if (qd.exists) questionMap[qid]=qd.data(); } catch(e){}
-  }
-
-  // Raporu atan kullanıcının bilgisi
-  const userIds = [...new Set(snap.docs.map(d=>d.data().userId||d.data().reportedBy).filter(Boolean))];
-  const userMap = {};
-  for (const uid of userIds) {
-    try { const ud = await db.collection('users').doc(uid).get(); if (ud.exists) userMap[uid]=ud.data(); } catch(e){}
-  }
-
-  let html = `<table><tr>
-    <th>Sebep</th><th>Soru</th><th>Çeviriler</th><th>Rapor Eden</th><th>Tarih</th><th>İşlem</th>
-  </tr>`;
-
-  snap.docs.forEach(d => {
-    const data = d.data();
-    const q = questionMap[data.questionId];
-    const reporter = userMap[data.userId||data.reportedBy];
-    const reporterLang = data.language || reporter?.language || reporter?.locale || '-';
-
-    // Soru özeti
-    let qSummary = '<span style="color:#555;font-size:11px">Soru bulunamadı</span>';
-    let translationHtml = '';
-    if (q) {
-      const trQ = q.translations?.tr?.question || q.translations?.en?.question || '-';
-      qSummary = `<span style="font-size:12px" title="${trQ}">${trQ.substring(0,60)}${trQ.length>60?'…':''}</span>`;
-      if (q.imageUrl) qSummary = `<img src="${q.imageUrl}" style="height:36px;border-radius:4px;margin-bottom:4px;display:block">${qSummary}`;
-
-      // Çeviriler
-      ['tr','en','ru','es'].forEach(lang => {
-        const t = q.translations?.[lang];
-        if (!t?.question) return;
-        const opts = t.options||[];
-        const correct = opts[q.correctAnswerIndex]||'?';
-        translationHtml += `<div style="margin-bottom:6px"><span style="font-size:10px;color:#0a84ff;font-weight:700">${lang.toUpperCase()}</span> `;
-        translationHtml += `<span style="font-size:11px;color:#ccc">${t.question.substring(0,50)}</span>`;
-        translationHtml += `<br><span style="font-size:10px;color:#34c759">✓ ${correct.substring(0,40)}</span></div>`;
-      });
+    // Soru detaylarını çek
+    const questionIds = [...new Set(snap.docs.map(d=>d.data().questionId).filter(Boolean))];
+    const questionMap = {};
+    for (const qid of questionIds) {
+      try { const qd = await db.collection('questions').doc(qid).get(); if (qd.exists) questionMap[qid]=qd.data(); } catch(e){}
     }
 
-    const reporterInfo = reporter ? `${reporter.displayName||'?'}<br><span style="font-size:10px;color:#0a84ff">🌐 ${reporterLang}</span>` : `<span style="color:#555;font-size:11px">${reporterLang!=='-'?'🌐 '+reporterLang:'Bilinmiyor'}</span>`;
+    // Raporu atan kullanıcının bilgisi
+    const userIds = [...new Set(snap.docs.map(d=>d.data().userId||d.data().reportedBy).filter(Boolean))];
+    const userMap = {};
+    for (const uid of userIds) {
+      try { const ud = await db.collection('users').doc(uid).get(); if (ud.exists) userMap[uid]=ud.data(); } catch(e){}
+    }
 
-    html += `<tr>
-      <td><span class="badge ${data.reason?.includes('ranslation')?'badge-yellow':'badge-red'}">${data.reason||'-'}</span></td>
-      <td style="max-width:200px">${qSummary}</td>
-      <td style="max-width:220px;font-size:11px">${translationHtml||'<span style="color:#555">-</span>'}</td>
-      <td style="font-size:12px">${reporterInfo}</td>
-      <td style="font-size:11px;color:#888;white-space:nowrap">${fmtDate(data.createdAt)}</td>
-      <td class="actions">
-        ${q?`<button class="btn btn-primary" onclick="showQuestion('${data.questionId}')">Detay</button>`:''}
-        <button class="btn btn-danger" onclick="resolveReport('${d.id}','${data.questionId}',true)">Sil & Kapat</button>
-        <button class="btn btn-secondary" onclick="resolveReport('${d.id}','',false)">Kapat</button>
-      </td>
+    // Soru detay modalı için allQuestions'a ekle
+    Object.entries(questionMap).forEach(([id, q]) => {
+      if (!allQuestions.find(x=>x.id===id)) allQuestions.push({id, ...q});
+    });
+
+    let html = `<table><tr>
+      <th>Sebep</th><th>Soru</th><th>Çeviriler</th><th>Rapor Eden</th><th>Tarih</th><th>İşlem</th>
     </tr>`;
-  });
-  html += '</table>';
-  document.getElementById('reports-table').innerHTML = html;
+
+    snap.docs.forEach(d => {
+      const data = d.data();
+      const q = questionMap[data.questionId];
+      const reporter = userMap[data.userId||data.reportedBy];
+      const reporterLang = data.language || (reporter && (reporter.language||reporter.locale)) || '-';
+
+      let qSummary = '<span style="color:#555;font-size:11px">Soru bulunamadı</span>';
+      let translationHtml = '';
+      if (q) {
+        const trQ = (q.translations&&q.translations.tr&&q.translations.tr.question) || (q.translations&&q.translations.en&&q.translations.en.question) || '-';
+        qSummary = `<span style="font-size:12px">${trQ.substring(0,60)}${trQ.length>60?'…':''}</span>`;
+        if (q.imageUrl) qSummary = `<img src="${q.imageUrl}" style="height:36px;border-radius:4px;margin-bottom:4px;display:block">${qSummary}`;
+
+        ['tr','en','ru','es'].forEach(function(lang) {
+          const t = q.translations && q.translations[lang];
+          if (!t || !t.question) return;
+          const opts = t.options||[];
+          const correct = opts[q.correctAnswerIndex]||'?';
+          translationHtml += '<div style="margin-bottom:6px"><span style="font-size:10px;color:#0a84ff;font-weight:700">'+lang.toUpperCase()+'</span> ';
+          translationHtml += '<span style="font-size:11px;color:#ccc">'+t.question.substring(0,50)+'</span>';
+          translationHtml += '<br><span style="font-size:10px;color:#34c759">✓ '+correct.substring(0,40)+'</span></div>';
+        });
+      }
+
+      const reporterInfo = reporter
+        ? (reporter.displayName||'?')+'<br><span style="font-size:10px;color:#0a84ff">🌐 '+reporterLang+'</span>'
+        : '<span style="color:#555;font-size:11px">'+(reporterLang!=='-'?'🌐 '+reporterLang:'Bilinmiyor')+'</span>';
+
+      const isTranslation = data.reason && data.reason.includes('ranslation');
+      html += '<tr>'
+        +'<td><span class="badge '+(isTranslation?'badge-yellow':'badge-red')+'">'+(data.reason||'-')+'</span></td>'
+        +'<td style="max-width:200px">'+qSummary+'</td>'
+        +'<td style="max-width:220px;font-size:11px">'+(translationHtml||'<span style="color:#555">-</span>')+'</td>'
+        +'<td style="font-size:12px">'+reporterInfo+'</td>'
+        +'<td style="font-size:11px;color:#888;white-space:nowrap">'+fmtDate(data.createdAt)+'</td>'
+        +'<td class="actions">'
+        +(q?'<button class="btn btn-primary" onclick="showQuestion(\''+data.questionId+'\')">Detay</button>':'')
+        +'<button class="btn btn-danger" onclick="resolveReport(\''+d.id+'\',\''+data.questionId+'\',true)">Sil & Kapat</button>'
+        +'<button class="btn btn-secondary" onclick="resolveReport(\''+d.id+'\',\'\',false)">Kapat</button>'
+        +'</td></tr>';
+    });
+    html += '</table>';
+    document.getElementById('reports-table').innerHTML = html;
+  } catch(e) {
+    document.getElementById('reports-table').innerHTML = '<div class="loading">Hata: ' + e.message + '</div>';
+    console.error(e);
+  }
 }
 
 async function resolveReport(reportId, questionId, deleteQ) {
