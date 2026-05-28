@@ -3,106 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrivAir Admin Panel</title>
+  <title>TrivAir Admin</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, sans-serif; background: #0a0e1a; color: #e0e0e0; min-height: 100vh; }
 
-    #login-screen {
-      display: flex; align-items: center; justify-content: center; height: 100vh;
-    }
-    .login-box {
-      background: #141824; border-radius: 16px; padding: 40px; width: 340px;
-      border: 1px solid #1e2a3a; text-align: center;
-    }
+    #login-screen { display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .login-box { background: #141824; border-radius: 16px; padding: 40px; width: 340px; border: 1px solid #1e2a3a; text-align: center; }
     .login-box h1 { color: #0a84ff; margin-bottom: 8px; font-size: 24px; }
     .login-box p { color: #888; margin-bottom: 24px; font-size: 14px; }
-    .login-box input {
-      width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid #1e2a3a;
-      background: #0a0e1a; color: #fff; font-size: 16px; margin-bottom: 12px;
-    }
-    .login-box button {
-      width: 100%; padding: 12px; background: #0a84ff; color: #fff; border: none;
-      border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: 600;
-    }
+    .login-box input { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid #1e2a3a; background: #0a0e1a; color: #fff; font-size: 16px; margin-bottom: 12px; }
+    .login-box button { width: 100%; padding: 12px; background: #0a84ff; color: #fff; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: 600; }
     .login-box button:hover { background: #0070d9; }
     #login-error { color: #ff453a; font-size: 13px; margin-top: 8px; display: none; }
 
     #admin-panel { display: none; }
-
-    header {
-      background: #141824; border-bottom: 1px solid #1e2a3a;
-      padding: 16px 24px; display: flex; align-items: center; gap: 16px;
-    }
+    header { background: #141824; border-bottom: 1px solid #1e2a3a; padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
     header h1 { color: #0a84ff; font-size: 20px; }
     header span { color: #888; font-size: 13px; }
-    header button {
-      margin-left: auto; padding: 8px 16px; background: #1e2a3a; color: #888;
-      border: none; border-radius: 8px; cursor: pointer; font-size: 13px;
-    }
+    header button { margin-left: auto; padding: 8px 16px; background: #1e2a3a; color: #888; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; }
 
-    .tabs {
-      display: flex; gap: 4px; padding: 16px 24px 0;
-      border-bottom: 1px solid #1e2a3a;
-    }
-    .tab {
-      padding: 10px 20px; cursor: pointer; border-radius: 8px 8px 0 0;
-      font-size: 14px; color: #888; border: 1px solid transparent;
-    }
-    .tab.active {
-      color: #0a84ff; background: #141824; border-color: #1e2a3a;
-      border-bottom-color: #141824;
-    }
+    .tabs { display: flex; gap: 4px; padding: 16px 24px 0; border-bottom: 1px solid #1e2a3a; }
+    .tab { padding: 10px 20px; cursor: pointer; border-radius: 8px 8px 0 0; font-size: 14px; color: #888; border: 1px solid transparent; }
+    .tab.active { color: #0a84ff; background: #141824; border-color: #1e2a3a; border-bottom-color: #141824; }
 
     .content { padding: 24px; }
-
-    .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 16px; margin-bottom: 24px;
-    }
-    .stat-card {
-      background: #141824; border-radius: 12px; padding: 20px;
-      border: 1px solid #1e2a3a; text-align: center;
-    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #141824; border-radius: 12px; padding: 20px; border: 1px solid #1e2a3a; text-align: center; }
     .stat-card .value { font-size: 32px; font-weight: 700; color: #0a84ff; }
     .stat-card .label { font-size: 12px; color: #888; margin-top: 4px; }
 
-    table {
-      width: 100%; border-collapse: collapse; background: #141824;
-      border-radius: 12px; overflow: hidden; border: 1px solid #1e2a3a;
-    }
-    th { background: #0a0e1a; padding: 12px 16px; text-align: left; font-size: 12px; color: #888; text-transform: uppercase; }
-    td { padding: 12px 16px; border-top: 1px solid #1e2a3a; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; background: #141824; border-radius: 12px; overflow: hidden; border: 1px solid #1e2a3a; }
+    th { background: #0a0e1a; padding: 10px 14px; text-align: left; font-size: 11px; color: #888; text-transform: uppercase; cursor: pointer; user-select: none; }
+    th:hover { color: #ccc; }
+    td { padding: 10px 14px; border-top: 1px solid #1e2a3a; font-size: 13px; vertical-align: top; }
     tr:hover td { background: #1a2030; }
 
-    .badge {
-      display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
-    }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .badge-blue { background: rgba(10,132,255,0.2); color: #0a84ff; }
     .badge-green { background: rgba(52,199,89,0.2); color: #34c759; }
     .badge-red { background: rgba(255,69,58,0.2); color: #ff453a; }
     .badge-yellow { background: rgba(255,214,10,0.2); color: #ffd60a; }
+    .badge-gray { background: rgba(150,150,150,0.2); color: #999; }
 
-    .actions { display: flex; gap: 8px; }
-    .btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; }
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn { padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 11px; font-weight: 600; }
     .btn-primary { background: #0a84ff; color: #fff; }
     .btn-danger { background: #ff453a; color: #fff; }
     .btn-secondary { background: #1e2a3a; color: #ccc; }
+    .btn-warning { background: #ff9f0a; color: #fff; }
 
-    .search-bar {
-      display: flex; gap: 12px; margin-bottom: 16px;
-    }
-    .search-bar input {
-      flex: 1; padding: 10px 16px; background: #141824; border: 1px solid #1e2a3a;
-      border-radius: 10px; color: #fff; font-size: 14px;
-    }
-    .search-bar select {
-      padding: 10px 16px; background: #141824; border: 1px solid #1e2a3a;
-      border-radius: 10px; color: #fff; font-size: 14px;
-    }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+    .toolbar input, .toolbar select { padding: 9px 14px; background: #141824; border: 1px solid #1e2a3a; border-radius: 10px; color: #fff; font-size: 13px; }
+    .toolbar input { flex: 1; min-width: 160px; }
 
     .loading { text-align: center; padding: 40px; color: #888; }
-    .report-text { font-size: 12px; color: #ccc; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Question detail modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #141824; border-radius: 16px; border: 1px solid #1e2a3a; padding: 28px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal h2 { color: #0a84ff; font-size: 18px; margin-bottom: 20px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: #1e2a3a; border: none; color: #888; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+    .lang-block { background: #0a0e1a; border-radius: 10px; padding: 14px; margin-bottom: 10px; border: 1px solid #1e2a3a; }
+    .lang-block .lang-tag { font-size: 11px; font-weight: 700; color: #0a84ff; text-transform: uppercase; margin-bottom: 6px; }
+    .lang-block .q-text { font-size: 14px; color: #fff; margin-bottom: 8px; }
+    .lang-block .opts { display: flex; flex-direction: column; gap: 4px; }
+    .lang-block .opt { font-size: 12px; color: #ccc; padding: 4px 8px; border-radius: 6px; background: #141824; }
+    .lang-block .opt.correct { color: #34c759; font-weight: 600; background: rgba(52,199,89,0.1); }
+    .img-preview { max-width: 100%; border-radius: 10px; margin-bottom: 12px; }
+
+    .pagination { padding: 12px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: #888; }
+    .sort-asc::after { content: ' ↑'; }
+    .sort-desc::after { content: ' ↓'; }
   </style>
 </head>
 <body>
@@ -148,39 +121,96 @@
 
     <!-- Users -->
     <div id="tab-users" style="display:none">
-      <div class="search-bar">
-        <input id="user-search" type="text" placeholder="Search by name..." oninput="filterUsers()">
+      <div class="toolbar">
+        <input id="user-search" type="text" placeholder="İsme göre ara..." oninput="filterUsers()">
+        <select id="user-sort" onchange="filterUsers()">
+          <option value="totalScore_desc">Skor (Yüksek→Düşük)</option>
+          <option value="totalScore_asc">Skor (Düşük→Yüksek)</option>
+          <option value="createdAt_desc">Kayıt (Yeni→Eski)</option>
+          <option value="createdAt_asc">Kayıt (Eski→Yeni)</option>
+          <option value="lastLogin_desc">Son Giriş (Yeni→Eski)</option>
+          <option value="lastLogin_asc">Son Giriş (Eski→Yeni)</option>
+          <option value="displayName_asc">İsim (A→Z)</option>
+        </select>
+        <select id="user-filter" onchange="filterUsers()">
+          <option value="">Tüm Kullanıcılar</option>
+          <option value="premium">Sadece Premium</option>
+          <option value="nonpremium">Premium Olmayanlar</option>
+        </select>
+        <button class="btn btn-secondary" onclick="loadUsers()">🔄 Yenile</button>
       </div>
+      <div id="users-count" style="font-size:12px;color:#888;margin-bottom:10px"></div>
       <div id="users-table"><div class="loading">Loading...</div></div>
     </div>
 
     <!-- Questions -->
     <div id="tab-questions" style="display:none">
-      <div class="search-bar">
-        <input id="q-search" type="text" placeholder="Search questions..." oninput="filterQuestions()">
-        <select id="q-category" onchange="allQuestions=[]; loadQuestions()">
-          <option value="">All Categories</option>
+      <div class="toolbar">
+        <input id="q-search" type="text" placeholder="Soru ara (TR)..." oninput="filterQuestions()">
+        <select id="q-category" onchange="allQuestions=[]; questionsPage=0; loadQuestions()">
+          <option value="">Tüm Kategoriler</option>
           <option>airport_codes</option>
           <option>aircraft_type</option>
           <option>logo_recognition</option>
           <option>aviation_records</option>
           <option>routes_distance</option>
           <option>aviation_cinema</option>
+          <option>callsign</option>
+        </select>
+        <select id="q-type" onchange="filterQuestions()">
+          <option value="">Tüm Tipler</option>
+          <option value="image">🖼️ Görsel</option>
+          <option value="text">📝 Metin</option>
+        </select>
+        <select id="q-disabled" onchange="filterQuestions()">
+          <option value="">Tümü</option>
+          <option value="active">Aktif</option>
+          <option value="disabled">Disabled</option>
         </select>
       </div>
+      <div id="questions-count" style="font-size:12px;color:#888;margin-bottom:10px"></div>
       <div id="questions-table"><div class="loading">Loading...</div></div>
     </div>
 
     <!-- Reports -->
     <div id="tab-reports" style="display:none">
+      <div class="toolbar">
+        <select id="report-status" onchange="loadReports()">
+          <option value="pending">Bekleyen</option>
+          <option value="resolved">Çözülen</option>
+          <option value="dismissed">Reddedilen</option>
+        </select>
+        <button class="btn btn-secondary" onclick="loadReports()">🔄 Yenile</button>
+      </div>
       <div id="reports-table"><div class="loading">Loading...</div></div>
     </div>
 
     <!-- Matches -->
     <div id="tab-matches" style="display:none">
+      <div class="toolbar">
+        <select id="match-status" onchange="loadMatches()">
+          <option value="">Tüm Aktif</option>
+          <option value="waiting_a_first_half">waiting_a_first_half</option>
+          <option value="waiting_b_first_half">waiting_b_first_half</option>
+          <option value="mid_score_pending">mid_score_pending</option>
+          <option value="waiting_a_second_half">waiting_a_second_half</option>
+          <option value="waiting_b_second_half">waiting_b_second_half</option>
+          <option value="completed">completed</option>
+        </select>
+        <button class="btn btn-secondary" onclick="loadMatches()">🔄 Yenile</button>
+      </div>
       <div id="matches-table"><div class="loading">Loading...</div></div>
     </div>
 
+  </div>
+</div>
+
+<!-- Question Detail Modal -->
+<div class="modal-overlay" id="question-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕ Kapat</button>
+    <h2>Soru Detayı</h2>
+    <div id="modal-content"></div>
   </div>
 </div>
 
@@ -189,7 +219,6 @@
 
 <script>
 const ADMIN_PASSWORD = 'TrivAir2026!Admin';
-
 const firebaseConfig = {
   apiKey: "AIzaSyApAMFiO4rRV8YyV-W6ajzk_OOIUB5Z_7g",
   authDomain: "triviair-2aa41.firebaseapp.com",
@@ -199,17 +228,16 @@ const firebaseConfig = {
   appId: "1:928837338187:android:cdcc8f3be627775febb9ce"
 };
 
-// Will be configured with real credentials
-let db;
-let allUsers = [];
-let allQuestions = [];
+let db, allUsers = [], allQuestions = [], questionsPage = 0;
+const PAGE_SIZE = 50;
 
 function login() {
   const pwd = document.getElementById('password-input').value;
   if (pwd === ADMIN_PASSWORD) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-panel').style.display = 'block';
-    initFirebase();
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
     loadDashboard();
   } else {
     document.getElementById('login-error').style.display = 'block';
@@ -223,79 +251,111 @@ function logout() {
 }
 
 function showTab(tab) {
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', ['dashboard','users','questions','reports','matches'][i] === tab);
-  });
-  ['dashboard','users','questions','reports','matches'].forEach(t => {
-    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
-  });
-  if (tab === 'users' && allUsers.length === 0) loadUsers();
-  if (tab === 'questions' && allQuestions.length === 0) loadQuestions();
-  if (tab === 'reports') loadReports();
-  if (tab === 'matches') loadMatches();
+  const tabs = ['dashboard','users','questions','reports','matches'];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tabs[i]===tab));
+  tabs.forEach(t => document.getElementById('tab-'+t).style.display = t===tab?'block':'none');
+  if (tab==='users' && allUsers.length===0) loadUsers();
+  if (tab==='questions' && allQuestions.length===0) loadQuestions();
+  if (tab==='reports') loadReports();
+  if (tab==='matches') loadMatches();
 }
 
-function initFirebase() {
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore();
-}
-
+// ============ DASHBOARD ============
 async function loadDashboard() {
   document.getElementById('last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
   try {
-    const [users, questions, activeMatches, reports, logos, premiumUsers] = await Promise.all([
+    const [users, questions, reports, logos, premiumUsers] = await Promise.all([
       db.collection('users').get(),
       db.collection('questions').get(),
-      db.collection('matches').where('status', '!=', 'completed').get(),
-      db.collection('question_reports').where('status', '==', 'pending').get(),
-      db.collection('questions').where('type', '==', 'image').get(),
-      db.collection('users').where('isPremium', '==', true).get(),
+      db.collection('question_reports').where('status','==','pending').get(),
+      db.collection('questions').where('type','==','image').where('category','==','logo_recognition').get(),
+      db.collection('users').where('isPremium','==',true).get(),
     ]);
+    const statuses = ['waiting_a_first_half','waiting_b_first_half','mid_score_pending','waiting_a_second_half','waiting_b_second_half'];
+    let activeCount = 0;
+    for (const s of statuses) {
+      const snap = await db.collection('matches').where('status','==',s).count().get();
+      activeCount += snap.data().count;
+    }
     document.getElementById('stat-users').textContent = users.size;
     document.getElementById('stat-questions').textContent = questions.size;
-    document.getElementById('stat-matches').textContent = activeMatches.size;
+    document.getElementById('stat-matches').textContent = activeCount;
     document.getElementById('stat-reports').textContent = reports.size;
     document.getElementById('stat-logos').textContent = logos.size;
     document.getElementById('stat-premium').textContent = premiumUsers.size;
 
-    // Category breakdown
     const cats = {};
-    questions.docs.forEach(d => {
-      const cat = d.data().category || 'unknown';
-      cats[cat] = (cats[cat] || 0) + 1;
-    });
-    const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]);
-    let html = '<table><tr><th>Category</th><th>Count</th></tr>';
-    sorted.forEach(([cat, count]) => {
-      html += `<tr><td>${cat}</td><td><span class="badge badge-blue">${count}</span></td></tr>`;
-    });
+    questions.docs.forEach(d => { const c = d.data().category||'unknown'; cats[c]=(cats[c]||0)+1; });
+    const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+    let html = '<table><tr><th>Kategori</th><th>Soru Sayısı</th></tr>';
+    sorted.forEach(([cat,count]) => { html+=`<tr><td>${cat}</td><td><span class="badge badge-blue">${count}</span></td></tr>`; });
     html += '</table>';
     document.getElementById('category-table').innerHTML = html;
   } catch(e) {
-    document.getElementById('category-table').innerHTML = '<div class="loading">Error: ' + e.message + '</div>';
+    document.getElementById('category-table').innerHTML = '<div class="loading">Error: '+e.message+'</div>';
   }
 }
 
+// ============ USERS ============
 async function loadUsers() {
-  document.getElementById('users-table').innerHTML = '<div class="loading">Loading...</div>';
-  const snap = await db.collection('users').orderBy('totalScore', 'desc').limit(100).get();
+  document.getElementById('users-table').innerHTML = '<div class="loading">Yükleniyor...</div>';
+  const snap = await db.collection('users').limit(500).get();
   allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderUsers(allUsers);
+  filterUsers();
+}
+
+function filterUsers() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  const sort = document.getElementById('user-sort').value;
+  const filter = document.getElementById('user-filter').value;
+
+  let users = allUsers.filter(u => {
+    const nameMatch = !q || (u.displayName||'').toLowerCase().includes(q);
+    const premiumMatch = filter==='' || (filter==='premium'&&u.isPremium) || (filter==='nonpremium'&&!u.isPremium);
+    return nameMatch && premiumMatch;
+  });
+
+  const [sortField, sortDir] = sort.split('_');
+  users.sort((a,b) => {
+    let av = a[sortField], bv = b[sortField];
+    if (sortField==='createdAt'||sortField==='lastLogin') {
+      av = av?.seconds||0; bv = bv?.seconds||0;
+    }
+    if (av===undefined) av = sortDir==='desc'?-Infinity:Infinity;
+    if (bv===undefined) bv = sortDir==='desc'?-Infinity:Infinity;
+    return sortDir==='desc' ? bv-av : av-bv;
+  });
+
+  document.getElementById('users-count').textContent = `${users.length} kullanıcı`;
+  renderUsers(users);
+}
+
+function fmtDate(ts) {
+  if (!ts) return '-';
+  const d = ts.toDate ? ts.toDate() : new Date(ts.seconds*1000);
+  return d.toLocaleDateString('tr-TR') + ' ' + d.toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit'});
 }
 
 function renderUsers(users) {
-  if (users.length === 0) { document.getElementById('users-table').innerHTML = '<div class="loading">No users</div>'; return; }
-  let html = '<table><tr><th>Name</th><th>Score</th><th>Jokers</th><th>Rights</th><th>Premium</th><th>Actions</th></tr>';
+  if (!users.length) { document.getElementById('users-table').innerHTML = '<div class="loading">Kullanıcı bulunamadı</div>'; return; }
+  let html = `<table><tr>
+    <th>İsim</th><th>Skor</th><th>Aylık Skor</th><th>Joker</th><th>Hak</th>
+    <th>Premium</th><th>Dil</th><th>Kayıt</th><th>Son Giriş</th><th>İşlem</th>
+  </tr>`;
   users.forEach(u => {
     html += `<tr>
-      <td>${u.displayName || '-'}</td>
-      <td>${u.totalScore || 0}</td>
-      <td>${u.jokersOwned || 0}</td>
-      <td>${u.matchRights ?? '-'}</td>
-      <td>${u.isPremium ? '<span class="badge badge-green">✨ Yes</span>' : '<span class="badge badge-yellow">No</span>'}</td>
+      <td><strong>${u.displayName||'-'}</strong><br><span style="font-size:10px;color:#555">${u.id.substring(0,10)}…</span></td>
+      <td>${u.totalScore||0}</td>
+      <td>${u.monthlyScore||0}</td>
+      <td>${u.jokersOwned||0}</td>
+      <td>${u.matchRights??'-'}</td>
+      <td>${u.isPremium?'<span class="badge badge-green">✨ Premium</span>':'<span class="badge badge-gray">Ücretsiz</span>'}</td>
+      <td>${u.language||u.locale||'-'}</td>
+      <td style="font-size:11px;white-space:nowrap">${fmtDate(u.createdAt)}</td>
+      <td style="font-size:11px;white-space:nowrap">${fmtDate(u.lastLogin||u.lastSeen)}</td>
       <td class="actions">
-        <button class="btn btn-secondary" onclick="addRights('${u.id}')">+5 Rights</button>
-        <button class="btn btn-secondary" onclick="addJokers('${u.id}')">+5 Jokers</button>
+        <button class="btn btn-secondary" onclick="addRights('${u.id}')">+5 Hak</button>
+        <button class="btn btn-secondary" onclick="addJokers('${u.id}')">+5 Joker</button>
       </td>
     </tr>`;
   });
@@ -303,97 +363,194 @@ function renderUsers(users) {
   document.getElementById('users-table').innerHTML = html;
 }
 
-function filterUsers() {
-  const q = document.getElementById('user-search').value.toLowerCase();
-  renderUsers(allUsers.filter(u => (u.displayName || '').toLowerCase().includes(q)));
-}
-
 async function addRights(uid) {
   await db.collection('users').doc(uid).update({ matchRights: firebase.firestore.FieldValue.increment(5) });
-  alert('Added 5 rights!');
+  alert('5 hak eklendi!');
 }
-
 async function addJokers(uid) {
   await db.collection('users').doc(uid).update({ jokersOwned: firebase.firestore.FieldValue.increment(5) });
-  alert('Added 5 jokers!');
+  alert('5 joker eklendi!');
 }
 
-let questionsPage = 0;
-const questionsPageSize = 50;
-
+// ============ QUESTIONS ============
 async function loadQuestions() {
-  document.getElementById('questions-table').innerHTML = '<div class="loading">Loading...</div>';
+  document.getElementById('questions-table').innerHTML = '<div class="loading">Yükleniyor...</div>';
   const cat = document.getElementById('q-category').value;
   let query = db.collection('questions');
-  if (cat) {
-    query = query.where('category', '==', cat).limit(500);
-  } else {
-    query = query.orderBy('category').limit(200);
-  }
-  const snap = await query.get();
+  if (cat) query = query.where('category','==',cat);
+  // Limit kaldırıldı — tüm soruları çek (kategori seçiliyse)
+  const snap = await query.limit(cat ? 2000 : 300).get();
   allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   questionsPage = 0;
-  renderQuestions(allQuestions);
-}
-
-function renderQuestions(qs) {
-  if (qs.length === 0) { document.getElementById('questions-table').innerHTML = '<div class="loading">No questions found</div>'; return; }
-  const start = questionsPage * questionsPageSize;
-  const end = start + questionsPageSize;
-  const page = qs.slice(start, end);
-  let html = '<table><tr><th>Question (TR)</th><th>Category</th><th>Type</th><th>Correct</th><th>Actions</th></tr>';
-  page.forEach(q => {
-    const text = q.translations?.tr?.question || '-';
-    const opts = q.translations?.tr?.options || [];
-    const correct = opts[q.correctAnswerIndex] || '-';
-    html += `<tr>
-      <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${text}</td>
-      <td><span class="badge badge-blue">${q.category || '-'}</span></td>
-      <td>${q.type === 'image' ? `<a href="${q.imageUrl}" target="_blank">🖼️</a>` : '📝'}</td>
-      <td style="font-size:12px;color:#0a84ff">${correct.substring(0,30)}</td>
-      <td><button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Delete</button></td>
-    </tr>`;
-  });
-  html += '</table>';
-  const totalPages = Math.ceil(qs.length / questionsPageSize);
-  html += `<div style="padding:12px;display:flex;gap:8px;align-items:center;font-size:13px;color:#888">`;
-  html += `<span>${start+1}–${Math.min(end,qs.length)} / ${qs.length}</span>`;
-  if (questionsPage > 0) html += `<button class="btn btn-secondary" onclick="questionsPage--;renderQuestions(allQuestions)">← Önceki</button>`;
-  if (end < qs.length) html += `<button class="btn btn-secondary" onclick="questionsPage++;renderQuestions(allQuestions)">Sonraki →</button>`;
-  html += `</div>`;
-  document.getElementById('questions-table').innerHTML = html;
+  filterQuestions();
 }
 
 function filterQuestions() {
   const q = document.getElementById('q-search').value.toLowerCase();
-  const cat = document.getElementById('q-category').value;
-  renderQuestions(allQuestions.filter(item => {
-    const text = (item.translations?.tr?.question || '').toLowerCase();
-    return (!q || text.includes(q)) && (!cat || item.category === cat);
-  }));
+  const type = document.getElementById('q-type').value;
+  const disabledFilter = document.getElementById('q-disabled').value;
+
+  let qs = allQuestions.filter(item => {
+    const text = (item.translations?.tr?.question||item.translations?.en?.question||'').toLowerCase();
+    const typeMatch = !type || item.type===type;
+    const disabledMatch = disabledFilter==='' || (disabledFilter==='active'&&!item.disabled) || (disabledFilter==='disabled'&&item.disabled);
+    return (!q||text.includes(q)) && typeMatch && disabledMatch;
+  });
+
+  document.getElementById('questions-count').textContent = `${qs.length} soru`;
+  renderQuestions(qs);
+}
+
+function renderQuestions(qs) {
+  if (!qs.length) { document.getElementById('questions-table').innerHTML = '<div class="loading">Soru bulunamadı</div>'; return; }
+  const start = questionsPage * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
+  const page = qs.slice(start, end);
+
+  let html = `<table><tr>
+    <th>Soru (TR)</th><th>Kategori</th><th>Tip</th><th>Doğru Cevap</th><th>Durum</th><th>İşlem</th>
+  </tr>`;
+  page.forEach(q => {
+    const tr = q.translations?.tr?.question || q.translations?.en?.question || '-';
+    const opts = q.translations?.tr?.options || q.translations?.en?.options || [];
+    const correct = opts[q.correctAnswerIndex] || '-';
+    const isImg = q.type==='image';
+    const imgPreview = isImg && q.imageUrl ? `<img src="${q.imageUrl}" style="height:48px;border-radius:6px;display:block;margin-bottom:4px">` : '';
+    html += `<tr>
+      <td style="max-width:280px">
+        ${imgPreview}
+        <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:280px" title="${tr}">${tr}</span>
+      </td>
+      <td><span class="badge badge-blue">${q.category||'-'}</span></td>
+      <td>${isImg?'🖼️':'📝'}</td>
+      <td style="font-size:12px;color:#34c759">${correct.substring(0,35)}</td>
+      <td>${q.disabled?'<span class="badge badge-red">Disabled</span>':'<span class="badge badge-green">Aktif</span>'}</td>
+      <td class="actions">
+        <button class="btn btn-primary" onclick="showQuestion('${q.id}')">Detay</button>
+        <button class="btn btn-warning" onclick="toggleDisable('${q.id}', ${!!q.disabled})">${q.disabled?'Aktifleştir':'Disable'}</button>
+        <button class="btn btn-danger" onclick="deleteQuestion('${q.id}')">Sil</button>
+      </td>
+    </tr>`;
+  });
+  html += '</table>';
+
+  html += `<div class="pagination">
+    <span>${start+1}–${Math.min(end,qs.length)} / ${qs.length}</span>
+    ${questionsPage>0?`<button class="btn btn-secondary" onclick="questionsPage--;filterQuestions()">← Önceki</button>`:''}
+    ${end<qs.length?`<button class="btn btn-secondary" onclick="questionsPage++;filterQuestions()">Sonraki →</button>`:''}
+  </div>`;
+
+  document.getElementById('questions-table').innerHTML = html;
+}
+
+function showQuestion(id) {
+  const q = allQuestions.find(x=>x.id===id);
+  if (!q) return;
+  const langs = ['tr','en','ru','es'];
+  const langNames = {tr:'🇹🇷 Türkçe', en:'🇬🇧 English', ru:'🇷🇺 Русский', es:'🇪🇸 Español'};
+  const opts = q.translations?.tr?.options || q.translations?.en?.options || [];
+
+  let html = '';
+  if (q.imageUrl) html += `<img src="${q.imageUrl}" class="img-preview">`;
+  html += `<p style="font-size:11px;color:#555;margin-bottom:16px">ID: ${q.id} | Kategori: ${q.category} | Doğru index: ${q.correctAnswerIndex}</p>`;
+
+  langs.forEach(lang => {
+    const t = q.translations?.[lang];
+    if (!t?.question) return;
+    html += `<div class="lang-block">
+      <div class="lang-tag">${langNames[lang]||lang}</div>
+      <div class="q-text">${t.question}</div>
+      <div class="opts">`;
+    (t.options||[]).forEach((opt,i) => {
+      html += `<div class="opt ${i===q.correctAnswerIndex?'correct':''}">${i===q.correctAnswerIndex?'✓':''} ${opt}</div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('question-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('question-modal').classList.remove('open');
+}
+
+async function toggleDisable(id, isDisabled) {
+  await db.collection('questions').doc(id).update({ disabled: !isDisabled });
+  allQuestions = allQuestions.map(q => q.id===id ? {...q, disabled:!isDisabled} : q);
+  filterQuestions();
 }
 
 async function deleteQuestion(id) {
-  if (!confirm('Delete this question?')) return;
+  if (!confirm('Bu soruyu silmek istediğine emin misin?')) return;
   await db.collection('questions').doc(id).delete();
-  allQuestions = allQuestions.filter(q => q.id !== id);
+  allQuestions = allQuestions.filter(q=>q.id!==id);
   filterQuestions();
-  alert('Deleted!');
 }
 
+// ============ REPORTS ============
 async function loadReports() {
-  document.getElementById('reports-table').innerHTML = '<div class="loading">Loading...</div>';
-  const snap = await db.collection('question_reports').where('status', '==', 'pending').limit(50).get();
-  if (snap.empty) { document.getElementById('reports-table').innerHTML = '<div class="loading">No pending reports 🎉</div>'; return; }
-  let html = '<table><tr><th>Reason</th><th>Question ID</th><th>Actions</th></tr>';
+  document.getElementById('reports-table').innerHTML = '<div class="loading">Yükleniyor...</div>';
+  const status = document.getElementById('report-status').value;
+  const snap = await db.collection('question_reports').where('status','==',status).orderBy('createdAt','desc').limit(100).get();
+  if (snap.empty) { document.getElementById('reports-table').innerHTML = '<div class="loading">Rapor yok 🎉</div>'; return; }
+
+  // Soru detaylarını çek
+  const questionIds = [...new Set(snap.docs.map(d=>d.data().questionId).filter(Boolean))];
+  const questionMap = {};
+  for (const qid of questionIds) {
+    try { const qd = await db.collection('questions').doc(qid).get(); if (qd.exists) questionMap[qid]=qd.data(); } catch(e){}
+  }
+
+  // Raporu atan kullanıcının bilgisi
+  const userIds = [...new Set(snap.docs.map(d=>d.data().userId||d.data().reportedBy).filter(Boolean))];
+  const userMap = {};
+  for (const uid of userIds) {
+    try { const ud = await db.collection('users').doc(uid).get(); if (ud.exists) userMap[uid]=ud.data(); } catch(e){}
+  }
+
+  let html = `<table><tr>
+    <th>Sebep</th><th>Soru</th><th>Çeviriler</th><th>Rapor Eden</th><th>Tarih</th><th>İşlem</th>
+  </tr>`;
+
   snap.docs.forEach(d => {
     const data = d.data();
+    const q = questionMap[data.questionId];
+    const reporter = userMap[data.userId||data.reportedBy];
+    const reporterLang = data.language || reporter?.language || reporter?.locale || '-';
+
+    // Soru özeti
+    let qSummary = '<span style="color:#555;font-size:11px">Soru bulunamadı</span>';
+    let translationHtml = '';
+    if (q) {
+      const trQ = q.translations?.tr?.question || q.translations?.en?.question || '-';
+      qSummary = `<span style="font-size:12px" title="${trQ}">${trQ.substring(0,60)}${trQ.length>60?'…':''}</span>`;
+      if (q.imageUrl) qSummary = `<img src="${q.imageUrl}" style="height:36px;border-radius:4px;margin-bottom:4px;display:block">${qSummary}`;
+
+      // Çeviriler
+      ['tr','en','ru','es'].forEach(lang => {
+        const t = q.translations?.[lang];
+        if (!t?.question) return;
+        const opts = t.options||[];
+        const correct = opts[q.correctAnswerIndex]||'?';
+        translationHtml += `<div style="margin-bottom:6px"><span style="font-size:10px;color:#0a84ff;font-weight:700">${lang.toUpperCase()}</span> `;
+        translationHtml += `<span style="font-size:11px;color:#ccc">${t.question.substring(0,50)}</span>`;
+        translationHtml += `<br><span style="font-size:10px;color:#34c759">✓ ${correct.substring(0,40)}</span></div>`;
+      });
+    }
+
+    const reporterInfo = reporter ? `${reporter.displayName||'?'}<br><span style="font-size:10px;color:#0a84ff">🌐 ${reporterLang}</span>` : `<span style="color:#555;font-size:11px">${reporterLang!=='-'?'🌐 '+reporterLang:'Bilinmiyor'}</span>`;
+
     html += `<tr>
-      <td class="report-text">${data.reason || '-'}</td>
-      <td style="font-size:11px;color:#888">${data.questionId || '-'}</td>
+      <td><span class="badge ${data.reason?.includes('ranslation')?'badge-yellow':'badge-red'}">${data.reason||'-'}</span></td>
+      <td style="max-width:200px">${qSummary}</td>
+      <td style="max-width:220px;font-size:11px">${translationHtml||'<span style="color:#555">-</span>'}</td>
+      <td style="font-size:12px">${reporterInfo}</td>
+      <td style="font-size:11px;color:#888;white-space:nowrap">${fmtDate(data.createdAt)}</td>
       <td class="actions">
-        <button class="btn btn-danger" onclick="deleteReportedQuestion('${d.id}','${data.questionId}')">Delete Q</button>
-        <button class="btn btn-secondary" onclick="dismissReport('${d.id}')">Dismiss</button>
+        ${q?`<button class="btn btn-primary" onclick="showQuestion('${data.questionId}')">Detay</button>`:''}
+        <button class="btn btn-danger" onclick="resolveReport('${d.id}','${data.questionId}',true)">Sil & Kapat</button>
+        <button class="btn btn-secondary" onclick="resolveReport('${d.id}','',false)">Kapat</button>
       </td>
     </tr>`;
   });
@@ -401,36 +558,38 @@ async function loadReports() {
   document.getElementById('reports-table').innerHTML = html;
 }
 
-async function deleteReportedQuestion(reportId, questionId) {
-  if (!confirm('Delete question and dismiss report?')) return;
-  const batch = db.batch();
-  if (questionId) batch.delete(db.collection('questions').doc(questionId));
-  batch.update(db.collection('question_reports').doc(reportId), { status: 'resolved' });
-  await batch.commit();
+async function resolveReport(reportId, questionId, deleteQ) {
+  if (deleteQ && questionId) {
+    if (!confirm('Soruyu silip raporu kapatmak istediğine emin misin?')) return;
+    await db.collection('questions').doc(questionId).delete();
+  }
+  await db.collection('question_reports').doc(reportId).update({ status:'resolved', resolvedAt: firebase.firestore.FieldValue.serverTimestamp() });
   loadReports();
 }
 
-async function dismissReport(reportId) {
-  await db.collection('question_reports').doc(reportId).update({ status: 'dismissed' });
-  loadReports();
-}
-
+// ============ MATCHES ============
 async function loadMatches() {
-  document.getElementById('matches-table').innerHTML = '<div class="loading">Loading...</div>';
-  const snap = await db.collection('matches').orderBy('createdAt', 'desc').limit(50).get();
-  let html = '<table><tr><th>Status</th><th>Players</th><th>Created</th></tr>';
+  document.getElementById('matches-table').innerHTML = '<div class="loading">Yükleniyor...</div>';
+  const status = document.getElementById('match-status').value;
+  let query = db.collection('matches').orderBy('createdAt','desc').limit(50);
+  if (status) query = db.collection('matches').where('status','==',status).orderBy('createdAt','desc').limit(50);
+  else query = db.collection('matches').where('status','!=','completed').orderBy('status').limit(100);
+
+  const snap = await query.get();
+  if (snap.empty) { document.getElementById('matches-table').innerHTML = '<div class="loading">Maç yok</div>'; return; }
+
+  const statusColors = { completed:'badge-green', mid_score_pending:'badge-yellow', waiting_a_first_half:'badge-blue', waiting_b_first_half:'badge-blue', waiting_a_second_half:'badge-blue', waiting_b_second_half:'badge-blue' };
+  let html = `<table><tr><th>Durum</th><th>Oyuncular</th><th>Skorlar</th><th>Oluşturulma</th></tr>`;
   snap.docs.forEach(d => {
     const data = d.data();
-    const created = data.createdAt?.toDate()?.toLocaleDateString() || '-';
-    const statusColors = {
-      completed: 'badge-green', mid_score_pending: 'badge-yellow',
-      waiting_a_first_half: 'badge-blue', waiting_b_first_half: 'badge-blue',
-    };
-    const color = statusColors[data.status] || 'badge-blue';
+    const color = statusColors[data.status]||'badge-blue';
+    const scoreA = (data.playerAPhase1Score||0)+(data.playerAFinalScore||0);
+    const scoreB = (data.playerBPhase1Score||0)+(data.playerBFinalScore||0);
     html += `<tr>
       <td><span class="badge ${color}">${data.status}</span></td>
-      <td style="font-size:11px;color:#888">${(data.playerA||'').substring(0,8)}... vs ${(data.playerB||'').substring(0,8)}...</td>
-      <td style="font-size:12px;color:#888">${created}</td>
+      <td style="font-size:11px;color:#888">${(data.playerA||'').substring(0,12)}…<br>${data.playerB?(data.playerB.substring(0,12)+'…'):'<span style="color:#555">Rakip yok</span>'}</td>
+      <td style="font-size:12px">${scoreA} — ${scoreB}</td>
+      <td style="font-size:11px;color:#888;white-space:nowrap">${fmtDate(data.createdAt)}</td>
     </tr>`;
   });
   html += '</table>';
