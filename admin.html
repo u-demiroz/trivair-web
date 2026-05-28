@@ -503,7 +503,7 @@ async function deleteQuestion(id) {
 async function loadReports() {
   document.getElementById('reports-table').innerHTML = '<div class="loading">Yükleniyor...</div>';
   const status = document.getElementById('report-status').value;
-  const snap = await db.collection('question_reports').where('status','==',status).orderBy('createdAt','desc').limit(100).get();
+  const snap = await db.collection('question_reports').where('status','==',status).limit(100).get();
   if (snap.empty) { document.getElementById('reports-table').innerHTML = '<div class="loading">Rapor yok 🎉</div>'; return; }
 
   // Soru detaylarını çek
