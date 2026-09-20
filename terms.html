@@ -19,8 +19,8 @@
       border-bottom: 1px solid #1e2a3a;
       padding: 16px 24px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 16px;
     }
     .logo {
       display: flex; align-items: center; gap: 10px;
@@ -28,6 +28,9 @@
       text-decoration: none;
     }
     .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: #8A9BB8; text-decoration: none; font-size: 14px; }
+    .nav-links a:hover { color: #fff; }
     .content {
       max-width: 760px;
       margin: 0 auto;
@@ -113,6 +116,11 @@
       <img src="logo.png" alt="TrivAir">
       TrivAir
     </a>
+    <div class="nav-links">
+      <a href="/#features">Features</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:support@trivair.app">Contact</a>
+    </div>
   </nav>
 
   <div class="content">
