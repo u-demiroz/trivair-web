@@ -30,6 +30,16 @@
   <!-- TikTok Pixel Code End -->
 </head>
 <body>
+  <!-- Language switcher -->
+  <div style="margin-bottom:24px;display:flex;gap:8px;flex-wrap:wrap;">
+    <button onclick="setLang('en')" id="btn-en" style="padding:6px 14px;border-radius:8px;border:1px solid #0a84ff;background:#0a84ff;color:#fff;cursor:pointer;font-size:14px;">EN</button>
+    <button onclick="setLang('tr')" id="btn-tr" style="padding:6px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#333;cursor:pointer;font-size:14px;">TR</button>
+    <button onclick="setLang('ru')" id="btn-ru" style="padding:6px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#333;cursor:pointer;font-size:14px;">RU</button>
+    <button onclick="setLang('es')" id="btn-es" style="padding:6px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#333;cursor:pointer;font-size:14px;">ES</button>
+  </div>
+
+  <!-- EN -->
+  <div id="lang-en">
   <h1>Terms of Use (EULA)</h1>
   <p><strong>Last updated:</strong> April 13, 2026</p>
   <p>These Terms of Use ("Terms") govern your use of TrivAir ("the App"), operated by TrivAir ("we", "us", or "our"). By downloading or using the App, you agree to these Terms.</p>
@@ -69,5 +79,118 @@
   <h2>10. Contact</h2>
   <p>For questions about these Terms, contact us at: <a href="mailto:hello@trivair.app">hello@trivair.app</a></p>
   <p>Website: <a href="https://trivair.app">trivair.app</a></p>
+  </div><!-- /lang-en -->
+
+  <!-- TR -->
+  <div id="lang-tr" style="display:none">
+  <h1>Kullanım Koşulları (EULA)</h1>
+  <p><strong>Son güncelleme:</strong> 13 Nisan 2026</p>
+  <p>Bu Kullanım Koşulları ("Koşullar"), TrivAir uygulamasının ("Uygulama") kullanımını düzenler. Uygulamayı indirerek veya kullanarak bu Koşulları kabul etmiş olursunuz.</p>
+  <h2>1. Koşulların Kabulü</h2>
+  <p>TrivAir'e erişerek veya kullanarak bu Koşullara bağlı olmayı kabul edersiniz. Kabul etmiyorsanız Uygulamayı kullanmayın.</p>
+  <h2>2. Uygulamanın Kullanımı</h2>
+  <p>TrivAir bir havacılık trivia oyunudur. Uygulamayı yalnızca kişisel, ticari olmayan amaçlarla kullanabilirsiniz. Hile yapmak veya diğer kullanıcıları rahatsız etmek yasaktır.</p>
+  <h2>3. Uygulama İçi Satın Almalar ve Abonelikler</h2>
+  <p>TrivAir isteğe bağlı satın almalar sunar:</p>
+  <ul>
+    <li><strong>TrivAir Premium</strong>: Aylık otomatik yenilenen abonelik. Mevcut dönemin bitiminden en az 24 saat önce iptal edilmezse abonelik otomatik olarak yenilenir.</li>
+    <li><strong>Joker Paketleri</strong>: Oyun içi avantaj sağlayan tek seferlik tüketilebilir satın almalar.</li>
+  </ul>
+  <p>Ödeme, satın alma onayında Apple ID hesabınıza yansır. Tüm satın almalar yasanın gerektirdiği durumlar dışında iade edilemez.</p>
+  <h2>4. Abonelik İptali</h2>
+  <p>İptal için: <strong>Ayarlar → Apple ID → Abonelikler → TrivAir Premium → İptal Et</strong>. İptal, mevcut fatura döneminin sonunda geçerli olur.</p>
+  <h2>5. Kullanıcı Hesapları</h2>
+  <p>Hesabınızın ve şifrenizin gizliliğini korumakla yükümlüsünüz. Yetkisiz kullanımdan doğan kayıplardan sorumlu değiliz.</p>
+  <h2>6. Fikri Mülkiyet</h2>
+  <p>TrivAir'deki tüm içerik bize ait veya lisanslıdır. İzinsiz kopyalama, değiştirme veya dağıtım yasaktır.</p>
+  <h2>7. Garanti Reddi</h2>
+  <p>Uygulama "olduğu gibi" sunulmaktadır. Kesintisiz veya hatasız çalışacağına dair garanti vermeyiz.</p>
+  <h2>8. Sorumluluk Sınırlaması</h2>
+  <p>Yasanın izin verdiği azami ölçüde, TrivAir dolaylı veya arızi zararlardan sorumlu tutulamaz.</p>
+  <h2>9. Koşullardaki Değişiklikler</h2>
+  <p>Koşulları istediğimiz zaman güncelleyebiliriz. Değişikliklerden sonra uygulamayı kullanmaya devam etmek yeni Koşulları kabul anlamına gelir.</p>
+  <h2>10. İletişim</h2>
+  <p>Sorularınız için: <a href="mailto:hello@trivair.app">hello@trivair.app</a></p>
+  <p>Web sitesi: <a href="https://trivair.app">trivair.app</a></p>
+  </div><!-- /lang-tr -->
+
+  <!-- RU -->
+  <div id="lang-ru" style="display:none">
+  <h1>Условия использования (EULA)</h1>
+  <p><strong>Последнее обновление:</strong> 13 апреля 2026 г.</p>
+  <p>Настоящие Условия использования («Условия») регулируют использование приложения TrivAir. Загружая или используя Приложение, вы соглашаетесь с настоящими Условиями.</p>
+  <h2>1. Принятие условий</h2>
+  <p>Получая доступ к TrivAir или используя его, вы соглашаетесь соблюдать настоящие Условия. Если вы не согласны, не используйте Приложение.</p>
+  <h2>2. Использование приложения</h2>
+  <p>TrivAir — игра-викторина об авиации. Вы можете использовать Приложение только в личных некоммерческих целях. Запрещается жульничать или мешать другим пользователям.</p>
+  <h2>3. Внутриигровые покупки и подписки</h2>
+  <ul>
+    <li><strong>TrivAir Premium</strong>: Ежемесячная автоматически возобновляемая подписка. Подписка автоматически продлевается, если её не отменить за 24 часа до окончания текущего периода.</li>
+    <li><strong>Пакеты джокеров</strong>: Разовые расходуемые покупки, дающие игровые преимущества.</li>
+  </ul>
+  <p>Оплата списывается с вашего Apple ID при подтверждении покупки. Все покупки являются окончательными и не подлежат возврату, кроме случаев, предусмотренных законом.</p>
+  <h2>4. Отмена подписки</h2>
+  <p>Для отмены: <strong>Настройки → Apple ID → Подписки → TrivAir Premium → Отменить</strong>. Отмена вступает в силу по окончании текущего платёжного периода.</p>
+  <h2>5. Учётные записи пользователей</h2>
+  <p>Вы несёте ответственность за конфиденциальность своей учётной записи. Мы не несём ответственности за убытки вследствие несанкционированного использования.</p>
+  <h2>6. Интеллектуальная собственность</h2>
+  <p>Весь контент TrivAir принадлежит нам или лицензирован нами. Копирование, изменение или распространение без разрешения запрещены.</p>
+  <h2>7. Отказ от гарантий</h2>
+  <p>Приложение предоставляется «как есть» без каких-либо гарантий.</p>
+  <h2>8. Ограничение ответственности</h2>
+  <p>В максимально допустимой законом степени TrivAir не несёт ответственности за косвенный или случайный ущерб.</p>
+  <h2>9. Изменения условий</h2>
+  <p>Мы можем обновлять Условия в любое время. Продолжение использования Приложения означает принятие новых Условий.</p>
+  <h2>10. Контакты</h2>
+  <p>По вопросам: <a href="mailto:hello@trivair.app">hello@trivair.app</a></p>
+  <p>Сайт: <a href="https://trivair.app">trivair.app</a></p>
+  </div><!-- /lang-ru -->
+
+  <!-- ES -->
+  <div id="lang-es" style="display:none">
+  <h1>Términos de Uso (EULA)</h1>
+  <p><strong>Última actualización:</strong> 13 de abril de 2026</p>
+  <p>Estos Términos de Uso ("Términos") rigen el uso de TrivAir ("la Aplicación"). Al descargar o usar la Aplicación, aceptas estos Términos.</p>
+  <h2>1. Aceptación de los términos</h2>
+  <p>Al acceder o usar TrivAir, aceptas estar sujeto a estos Términos. Si no estás de acuerdo, no uses la Aplicación.</p>
+  <h2>2. Uso de la aplicación</h2>
+  <p>TrivAir es un juego de trivia de aviación. Puedes usar la Aplicación solo para fines personales no comerciales. Está prohibido hacer trampa o interferir con otros usuarios.</p>
+  <h2>3. Compras y suscripciones en la aplicación</h2>
+  <ul>
+    <li><strong>TrivAir Premium</strong>: Suscripción mensual con renovación automática. Se renueva automáticamente a menos que la canceles al menos 24 horas antes del fin del período actual.</li>
+    <li><strong>Paquetes de Comodines</strong>: Compras únicas consumibles que otorgan ventajas en el juego.</li>
+  </ul>
+  <p>El pago se carga en tu Apple ID al confirmar la compra. Todas las compras son definitivas y no reembolsables, salvo lo que exija la ley.</p>
+  <h2>4. Cancelación de suscripción</h2>
+  <p>Para cancelar: <strong>Ajustes → Apple ID → Suscripciones → TrivAir Premium → Cancelar</strong>. La cancelación surte efecto al final del período de facturación actual.</p>
+  <h2>5. Cuentas de usuario</h2>
+  <p>Eres responsable de mantener la confidencialidad de tu cuenta. No somos responsables de pérdidas por uso no autorizado.</p>
+  <h2>6. Propiedad intelectual</h2>
+  <p>Todo el contenido de TrivAir es de nuestra propiedad o está licenciado. Está prohibido copiar, modificar o distribuir contenido sin permiso.</p>
+  <h2>7. Exclusión de garantías</h2>
+  <p>La Aplicación se proporciona "tal cual" sin garantías de ningún tipo.</p>
+  <h2>8. Limitación de responsabilidad</h2>
+  <p>En la máxima medida permitida por la ley, TrivAir no será responsable de daños indirectos o incidentales.</p>
+  <h2>9. Cambios en los términos</h2>
+  <p>Podemos actualizar estos Términos en cualquier momento. El uso continuado de la Aplicación implica la aceptación de los nuevos Términos.</p>
+  <h2>10. Contacto</h2>
+  <p>Para preguntas: <a href="mailto:hello@trivair.app">hello@trivair.app</a></p>
+  <p>Sitio web: <a href="https://trivair.app">trivair.app</a></p>
+  </div><!-- /lang-es -->
+
+  <script>
+  function setLang(lang) {
+    ['en','tr','ru','es'].forEach(l => {
+      document.getElementById('lang-'+l).style.display = l===lang?'block':'none';
+      var btn = document.getElementById('btn-'+l);
+      btn.style.background = l===lang?'#0a84ff':'#fff';
+      btn.style.color = l===lang?'#fff':'#333';
+      btn.style.borderColor = l===lang?'#0a84ff':'#ccc';
+    });
+  }
+  // Auto-detect language
+  var userLang = (navigator.language || 'en').toLowerCase().substring(0,2);
+  if (['tr','ru','es'].includes(userLang)) setLang(userLang);
+  </script>
 </body>
 </html>
