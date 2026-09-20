@@ -4,10 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Use - TrivAir</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.6; }
-    h1 { color: #0a84ff; } h2 { color: #333; margin-top: 30px; }
-    a { color: #0a84ff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0e1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+    nav {
+      background: #141824;
+      border-bottom: 1px solid #1e2a3a;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 18px; font-weight: 700; color: #fff;
+      text-decoration: none;
+    }
+    .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .lang-switcher {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .lang-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid #1e2a3a;
+      background: #141824;
+      color: #888;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: #0a84ff;
+      color: #fff;
+      border-color: #0a84ff;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .updated {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0a84ff;
+      margin: 32px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    p { color: #b0b8c8; margin-bottom: 12px; }
+    ul { color: #b0b8c8; padding-left: 20px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; }
+    strong { color: #e0e0e0; }
+    a { color: #0a84ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer {
+      background: #141824;
+      border-top: 1px solid #1e2a3a;
+      padding: 24px;
+      text-align: center;
+      color: #555;
+      font-size: 13px;
+    }
+    footer a { color: #888; margin: 0 8px; }
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PH7NGPGWY6"></script>
@@ -30,18 +108,26 @@
   <!-- TikTok Pixel Code End -->
 </head>
 <body>
+  <nav>
+    <a href="/" class="logo">
+      <img src="logo.png" alt="TrivAir">
+      TrivAir
+    </a>
+  </nav>
+
+  <div class="content">
   <!-- Language switcher -->
-  <div style="margin-bottom:24px;display:flex;gap:8px;flex-wrap:wrap;">
-    <button onclick="setLang('en')" id="btn-en" style="padding:6px 14px;border-radius:8px;border:1px solid #0a84ff;background:#0a84ff;color:#fff;cursor:pointer;font-size:14px;">EN</button>
-    <button onclick="setLang('tr')" id="btn-tr" style="padding:6px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#333;cursor:pointer;font-size:14px;">TR</button>
-    <button onclick="setLang('ru')" id="btn-ru" style="padding:6px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#333;cursor:pointer;font-size:14px;">RU</button>
-    <button onclick="setLang('es')" id="btn-es" style="padding:6px 14px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#333;cursor:pointer;font-size:14px;">ES</button>
+  <div class="lang-switcher">
+    <button onclick="setLang('en')" id="btn-en" class="lang-btn active">EN</button>
+    <button onclick="setLang('tr')" id="btn-tr" class="lang-btn">TR</button>
+    <button onclick="setLang('ru')" id="btn-ru" class="lang-btn">RU</button>
+    <button onclick="setLang('es')" id="btn-es" class="lang-btn">ES</button>
   </div>
 
   <!-- EN -->
   <div id="lang-en">
   <h1>Terms of Use (EULA)</h1>
-  <p><strong>Last updated:</strong> April 13, 2026</p>
+  <p class="updated">Last updated: April 13, 2026</p>
   <p>These Terms of Use ("Terms") govern your use of TrivAir ("the App"), operated by TrivAir ("we", "us", or "our"). By downloading or using the App, you agree to these Terms.</p>
 
   <h2>1. Acceptance of Terms</h2>
@@ -84,7 +170,7 @@
   <!-- TR -->
   <div id="lang-tr" style="display:none">
   <h1>Kullanım Koşulları (EULA)</h1>
-  <p><strong>Son güncelleme:</strong> 13 Nisan 2026</p>
+  <p class="updated">Son güncelleme: 13 Nisan 2026</p>
   <p>Bu Kullanım Koşulları ("Koşullar"), TrivAir uygulamasının ("Uygulama") kullanımını düzenler. Uygulamayı indirerek veya kullanarak bu Koşulları kabul etmiş olursunuz.</p>
   <h2>1. Koşulların Kabulü</h2>
   <p>TrivAir'e erişerek veya kullanarak bu Koşullara bağlı olmayı kabul edersiniz. Kabul etmiyorsanız Uygulamayı kullanmayın.</p>
@@ -117,7 +203,7 @@
   <!-- RU -->
   <div id="lang-ru" style="display:none">
   <h1>Условия использования (EULA)</h1>
-  <p><strong>Последнее обновление:</strong> 13 апреля 2026 г.</p>
+  <p class="updated">Последнее обновление: 13 апреля 2026 г.</p>
   <p>Настоящие Условия использования («Условия») регулируют использование приложения TrivAir. Загружая или используя Приложение, вы соглашаетесь с настоящими Условиями.</p>
   <h2>1. Принятие условий</h2>
   <p>Получая доступ к TrivAir или используя его, вы соглашаетесь соблюдать настоящие Условия. Если вы не согласны, не используйте Приложение.</p>
@@ -149,7 +235,7 @@
   <!-- ES -->
   <div id="lang-es" style="display:none">
   <h1>Términos de Uso (EULA)</h1>
-  <p><strong>Última actualización:</strong> 13 de abril de 2026</p>
+  <p class="updated">Última actualización: 13 de abril de 2026</p>
   <p>Estos Términos de Uso ("Términos") rigen el uso de TrivAir ("la Aplicación"). Al descargar o usar la Aplicación, aceptas estos Términos.</p>
   <h2>1. Aceptación de los términos</h2>
   <p>Al acceder o usar TrivAir, aceptas estar sujeto a estos Términos. Si no estás de acuerdo, no uses la Aplicación.</p>
@@ -178,17 +264,25 @@
   <p>Sitio web: <a href="https://trivair.app">trivair.app</a></p>
   </div><!-- /lang-es -->
 
+  </div><!-- /content -->
+
+  <footer>
+    <p>© 2026 TrivAir. All rights reserved.</p>
+    <p style="margin-top:8px;">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="mailto:support@trivair.app">Contact</a>
+    </p>
+  </footer>
+
   <script>
   function setLang(lang) {
     ['en','tr','ru','es'].forEach(l => {
       document.getElementById('lang-'+l).style.display = l===lang?'block':'none';
       var btn = document.getElementById('btn-'+l);
-      btn.style.background = l===lang?'#0a84ff':'#fff';
-      btn.style.color = l===lang?'#fff':'#333';
-      btn.style.borderColor = l===lang?'#0a84ff':'#ccc';
+      btn.classList.toggle('active', l===lang);
     });
   }
-  // Auto-detect language
   var userLang = (navigator.language || 'en').toLowerCase().substring(0,2);
   if (['tr','ru','es'].includes(userLang)) setLang(userLang);
   </script>
